@@ -9,11 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.google.common.base.Optional;
-
-import java.util.Map;
 
 public class TestOptional extends BaseTest
 {
@@ -27,12 +23,6 @@ public class TestOptional extends BaseTest
     @JsonAutoDetect(fieldVisibility=Visibility.ANY)
     public static final class OptionalGenericData<T>{
         private Optional<T> myData;
-    }
-
-    @JsonAutoDetect(fieldVisibility=Visibility.ANY)
-    public static final class OptionalRequiredData{
-        @JsonProperty(required = true)
-        private Optional<String> myRequiredString;
     }
 
     @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class)
