@@ -1,8 +1,9 @@
 package com.fasterxml.jackson.datatype.guava;
 
+import java.util.*;
+
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -47,7 +48,7 @@ public class TestOptional extends BaseTest
             baseUnit = Optional.of(u);
         }
     }
-    
+
     /*
     /**********************************************************************
     /* Test methods
@@ -147,7 +148,7 @@ public class TestOptional extends BaseTest
 		assertEquals(myData.myString, deserializedMyData.myString);
     }
 
-    // for [Issue#17]
+    // [Issue#17]
     public void testObjectId() throws Exception
     {
         final Unit input = new Unit();
@@ -161,29 +162,25 @@ public class TestOptional extends BaseTest
         assertSame(result, base);
     }
 
-    public void testSchemaGeneric() throws Exception {
-        JsonSchema jsonSchema = new JsonSchemaGenerator(MAPPER).generateSchema(OptionalData.class);
-        assertNotNull(jsonSchema);
-        assertTrue(jsonSchema.isObjectSchema());
-        Map<String, JsonSchema> properties = jsonSchema.asObjectSchema().getProperties();
-        assertNotNull(properties);
-        assertEquals(properties.size(), 1);
-        Map.Entry<String, JsonSchema> property = properties.entrySet().iterator().next();
-        assertNotNull(property);
-        assertEquals(property.getKey(), "myString");
-        assertTrue(property.getValue().isStringSchema());
-    }
+    // [Issue#37]
+    public void testOptionalCollection() throws Exception {
+        ObjectMapper mapper = new ObjectMapper().registerModule(new GuavaModule());
 
-    public void testSchemaRequired() throws Exception {
-        JsonSchema jsonSchema = new JsonSchemaGenerator(MAPPER).generateSchema(OptionalRequiredData.class);
-        assertNotNull(jsonSchema);
-        assertTrue(jsonSchema.isObjectSchema());
-        Map<String, JsonSchema> properties = jsonSchema.asObjectSchema().getProperties();
-        assertNotNull(properties);
-        assertEquals(properties.size(), 1);
-        Map.Entry<String, JsonSchema> property = properties.entrySet().iterator().next();
-        assertNotNull(property);
-        assertEquals(property.getKey(), "myRequiredString");
-        assertTrue(property.getValue().getRequired() == null || !property.getValue().getRequired());
+        TypeReference<List<Optional<String>>> typeReference =
+            new TypeReference<List<Optional<String>>>() {};
+
+        List<Optional<String>> list = new ArrayList<Optional<String>>();
+        list.add(Optional.of("2014-1-22"));
+        list.add(Optional.<String>absent());
+        list.add(Optional.of("2014-1-23"));
+
+        String str = mapper.writeValueAsString(list);
+        assertEquals("[\"2014-1-22\",null,\"2014-1-23\"]", str);
+
+        List<Optional<String>> result = mapper.readValue(str, typeReference);
+        assertEquals(list.size(), result.size());
+        for (int i = 0; i < list.size(); ++i) {
+            assertEquals("Entry #"+i, list.get(i), result.get(i));
+        }
     }
 }

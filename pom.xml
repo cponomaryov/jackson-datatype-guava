@@ -8,7 +8,7 @@
   <groupId>com.fasterxml.jackson.datatype</groupId>
   <artifactId>jackson-datatype-guava</artifactId>
   <name>Jackson-datatype-Guava</name>
-  <version>2.3.2-SNAPSHOT</version>
+  <version>2.3.3-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <description>Add-on datatype-support module for Jackson (http://jackson.codehaus.org) that handles
 Guava (http://code.google.com/p/guava-libraries/) types (currently mostly just collection ones)
@@ -21,8 +21,15 @@ Guava (http://code.google.com/p/guava-libraries/) types (currently mostly just c
     <tag>HEAD</tag>
   </scm>
 
+  <contributors>
+    <contributor>
+      <name>Steven Schlansker</name>
+      <email>steven@nesscomputing.com</email>
+    </contributor>
+  </contributors>
+
   <properties>
-    <version.jackson>2.3.1</version.jackson>
+    <version.jackson>2.3.3-SNAPSHOT</version.jackson>
 
     <!-- Generate PackageVersion.java into this directory. -->
     <packageVersion.dir>com/fasterxml/jackson/datatype/guava</packageVersion.dir>
